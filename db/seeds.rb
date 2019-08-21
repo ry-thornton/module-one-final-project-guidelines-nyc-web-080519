@@ -23,3 +23,9 @@ Question.create(question_text: "What is the popular phrase coined by Evans Wang?
 # Question.create(question_text: "What is the capital of New York?", correct_answer: "Albany", incorrect_answer1: "New York City", incorrect_answer2: "Buffalo", incorrect_answer3: "Syracuse")
 # Question.create(question_text: "What is the capital of New York?", correct_answer: "Albany", incorrect_answer1: "New York City", incorrect_answer2: "Buffalo", incorrect_answer3: "Syracuse")
 # Question.create(question_text: "What is the capital of New York?", correct_answer: "Albany", incorrect_answer1: "New York City", incorrect_answer2: "Buffalo", incorrect_answer3: "Syracuse")
+
+
+
+Game.create(user_id: 1, score: 5)
+Game.create(user_id: 2, score: 3)
+Game.create(user_id: 1, score: 7)
