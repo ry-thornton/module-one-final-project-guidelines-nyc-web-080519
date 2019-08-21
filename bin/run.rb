@@ -14,6 +14,7 @@ def welcome
     elsif input == "2"
         puts "The current longest streak is..."
         puts find_highest_score
+        #Would you like to keep playing 
     else
         puts "Sorry, that isn't a valid entry. Please try again."
         restart_welcome
@@ -87,16 +88,24 @@ def save_user(username)
     end
 
         if usernames.include?(username)
-            puts "Welcome back #{username}! Please enter 1 to play, 2 to see your highest streak, or 3 to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
-            puts "--------------------------------------------------------------------"
+            puts "Welcome back #{username}! Please enter 
+                                            1 to PLAY, 
+                                            2 to SEE YOUR HIGHEST STREAK 
+                                            3 to CHANGE USERNAME
+                                            4 to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
+            puts "-----------------------------------------------------------------------------------"
             
             input = gets.chomp
                 if input == "1"
                     run_game(username)
                 elsif input == "2"
                     my_highest_score(username)
-
                 elsif input == "3"
+                    puts "Please enter new username"
+                    new_name = gets.chomp
+                    change_username(new_name, username)
+
+                elsif input == "4"
                     User.find_by(name: username).delete
                 else
                     puts "Sorry, that isn't a valid entry. Please try again."
@@ -113,9 +122,40 @@ def find_highest_score
 end
 
 def my_highest_score(username)
-    highest_score = Game.find_by(user_id: username.id).order(score: :desc)first.score
-    binding.pry
+    my_user = User.all.find_by(name: username)
+    my_user_id = my_user.id
+    highest_score = Game.all.where(user_id: my_user_id).order(score: :desc).first.score
+        if highest_score >= 3
+        puts "Your highest score is #{highest_score}!!!
+        Want to try and beat this score? (y/n)"
+            input = gets.chomp
+                if input == "y"
+                    run_game(username)
+                elsif input == "n"
+                    puts "Have a good day!"
+                end
+        
+        else 
+            puts "Your highest score is #{highest_score}!!! This is nothing to brag about. Find a new hobby cause Streak Trivia ain't it"
+        end
 end
+
+def change_username(new_name, username)
+    usernames = User.all.map do |user|
+        user.name
+    end
+    if usernames.include?(new_name)
+        puts "Sorry, that username is already taken. Please choose another one."
+        new_name = gets.chomp
+        change_username(new_name, username)
+
+    else
+        User.find_by(name: username).update(name: new_name)
+        puts "Your username is now #{new_name}!"
+        restart_welcome
+    end
+end
+
 
 
 welcome
