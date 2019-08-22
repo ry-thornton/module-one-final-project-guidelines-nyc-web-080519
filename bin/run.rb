@@ -7,14 +7,14 @@ require 'colorize'
 
 def welcome
     
-    puts "Hello, Welcome to Streak Trivia. Please enter:
-                                                    (1) to LOGIN
-                                                    (2) to see CURRENT BEST STREAK"
+    puts "Hello, Welcome to Streak Trivia. Please enter: (1) to LOGIN
+                                               (2) to see CURRENT BEST STREAK"
     input = gets.chomp.downcase
     if input == "1"
         page_break
         puts "Please enter username:"
         username = gets.chomp.downcase
+        page_break
         save_user(username)
     elsif input == "2"
         page_break
@@ -74,11 +74,14 @@ def run_game(username, count = 0)
     answers_array << exact_question_incorrect_choice_1
     answers_array << exact_question_incorrect_choice_2
     answers_array << exact_question_incorrect_choice_3
-    puts exact_question
+    puts exact_question.colorize(:blue)
+    puts ""
     puts answers_array.shuffle
+    page_break
 
     answer = gets.chomp.downcase
         if answer.to_s.downcase == (random_question.correct_answer.downcase)
+            pid = fork{ exec 'afplay', 'chaching.mp3' }
             new_count = (count += 1)
             run_game(username, new_count)
         elsif answer.to_s.downcase == "pass"
@@ -86,6 +89,8 @@ def run_game(username, count = 0)
             run_game(username, new_count)
         else
             page_break
+            pid = fork{ exec 'afplay', 'perfect-fart.mp3' }
+
             new_count = count
             puts "Sorry! That was not the correct answer :( You finished with a streak of #{count}!".colorize(:red)
             play_again_prompt(username)
@@ -105,11 +110,10 @@ def save_user(username)
     end
 
         if usernames.include?(username)
-            puts "Welcome back #{username}! Please enter: 
-                                                (1) to PLAY, 
-                                                (2) to SEE YOUR HIGHEST STREAK 
-                                                (3) to CHANGE USERNAME
-                                                (4) to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
+            puts "Welcome back #{username}! Please enter: (1) to PLAY, 
+                                   (2) to SEE YOUR HIGHEST STREAK 
+                                   (3) to CHANGE USERNAME
+                                   (4) to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
             page_break
             
             input = gets.chomp.downcase
@@ -153,6 +157,9 @@ def my_highest_score(username)
                                                                                             (n) for 'no'"
             input = gets.chomp.downcase
                 if input == "y"
+                    system("clear")
+                    game_logo
+
                     run_game(username)
                 elsif input == "n"
                     page_break
@@ -185,7 +192,7 @@ def change_username(new_name, username)
 end
 
 def page_break
-    puts "-------------------------------------------------------------------------------"
+    puts "----------------------------------------------------------------------------------------------"
 end
 
 def play_again_prompt(username)
@@ -193,6 +200,9 @@ def play_again_prompt(username)
     puts "Would you like to play again? Press y for 'yes' and n for 'no'"
     input = gets.chomp.downcase
         if input == "y"
+            system("clear")
+            game_logo 
+    
             run_game(username, count = 0)
         elsif input == "n"
             page_break
@@ -215,6 +225,7 @@ def game_logo
     ".colorize(:blue)
 
 end
+
 
 game_logo
 welcome
