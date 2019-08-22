@@ -7,8 +7,8 @@ require 'colorize'
 
 def welcome
     
-    puts "Hello, Welcome to Streak Trivia. Please enter: (1) to LOGIN
-                                               (2) to see CURRENT BEST STREAK"
+    puts "Hello, Welcome to Streak Trivia. Please enter: (1) to" + " LOGIN".colorize(:green).bold
+    puts "                                               (2) to see" + " CURRENT BEST STREAK".colorize(:blue).bold
     input = gets.chomp.downcase
     if input == "1"
         page_break
@@ -18,8 +18,7 @@ def welcome
         save_user(username)
     elsif input == "2"
         page_break
-        puts "The current longest streak is..."
-        puts find_highest_score
+        puts "The current longest streak is... #{find_highest_score.to_s.colorize(:green).bold}"
         restart_welcome
     else
         page_break
@@ -30,9 +29,10 @@ end
 
 def restart_welcome
     page_break
-    puts "Please enter:
-                    (1) to LOGIN
-                    (2) to see CURRENT BEST STREAK"
+    puts "Please enter: (1) to" + " LOGIN".colorize(:green).bold
+    puts "              (2) to see" + " CURRENT BEST STREAK".colorize(:blue).bold
+                    # (1) to LOGIN
+                    # (2) to see CURRENT BEST STREAK"
     input = gets.chomp.downcase
         if input == "1"
             page_break
@@ -52,7 +52,7 @@ end
 
 def game_start(username)
     page_break
-    puts "Welcome #{username}, you will be asked questions 
+    puts "Welcome #{username.colorize(:blue).bold}, you will be asked questions 
         until you get one incorrect. Answer each question by typing
         out the correct answer. Please enter proper capitilization and punctuation
         to move on to the next question. If question is unanswerable, please type
@@ -110,10 +110,10 @@ def save_user(username)
     end
 
         if usernames.include?(username)
-            puts "Welcome back #{username}! Please enter: (1) to PLAY, 
-                                   (2) to SEE YOUR HIGHEST STREAK 
-                                   (3) to CHANGE USERNAME
-                                   (4) to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
+            puts "Welcome back #{username.colorize(:blue).bold}! Please enter: (1) to" + " PLAY".colorize(:green).bold
+            puts "                                                             (2) to" + " SEE YOUR HIGHEST STREAK".colorize(:blue).bold
+            puts "                                                             (3) to" + " CHANGE USERNAME".colorize(:cyan)
+            puts "                                                             (4) to" + " DELETE YOUR ACCOUNT (...obviously we advise against this)".colorize(:red).bold
             page_break
             
             input = gets.chomp.downcase
