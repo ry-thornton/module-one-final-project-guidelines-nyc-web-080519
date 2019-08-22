@@ -2,23 +2,18 @@ require_relative '../config/environment'
 require 'pry'
 ActiveRecord::Base.logger.level = 1
 system("clear")
+require 'colorize'
+
 
 def welcome
-
-    puts "
-    ███████╗████████╗██████╗ ███████╗ █████╗ ██╗  ██╗    ████████╗██████╗ ██╗██╗   ██╗██╗ █████╗ 
-    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗██║ ██╔╝    ╚══██╔══╝██╔══██╗██║██║   ██║██║██╔══██╗
-    ███████╗   ██║   ██████╔╝█████╗  ███████║█████╔╝        ██║   ██████╔╝██║██║   ██║██║███████║
-    ╚════██║   ██║   ██╔══██╗██╔══╝  ██╔══██║██╔═██╗        ██║   ██╔══██╗██║╚██╗ ██╔╝██║██╔══██║
-    ███████║   ██║   ██║  ██║███████╗██║  ██║██║  ██╗       ██║   ██║  ██║██║ ╚████╔╝ ██║██║  ██║
-    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝       ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═╝                                                                                             
-    "
     
-    puts "Hello, Welcome to Streak Trivia. Please enter 1 to start game or 2 to see Streak Trivia's best streak!!"
+    puts "Hello, Welcome to Streak Trivia. Please enter:
+                                                    (1) to LOGIN
+                                                    (2) to see CURRENT BEST STREAK"
     input = gets.chomp.downcase
     if input == "1"
         page_break
-        puts "Please enter a username to start!"
+        puts "Please enter username:"
         username = gets.chomp.downcase
         save_user(username)
     elsif input == "2"
@@ -28,14 +23,16 @@ def welcome
         restart_welcome
     else
         page_break
-        puts "Sorry, that isn't a valid entry. Please try again."
-        restart_welcome
+        puts "Sorry, that isn't a valid entry. Gimme 20 push ups!  Then try again."
+        welcome
     end
 end
 
 def restart_welcome
     page_break
-    puts "Please enter 1 to start game or 2 to see Streak Trivia's best streak!!"
+    puts "Please enter:
+                    (1) to LOGIN
+                    (2) to see CURRENT BEST STREAK"
     input = gets.chomp.downcase
         if input == "1"
             page_break
@@ -57,9 +54,9 @@ def game_start(username)
     page_break
     puts "Welcome #{username}, you will be asked questions 
         until you get one incorrect. Answer each question by typing
-        out the correct answer. If question is unanswerable, please type
-        in 'pass'. Get ready to play."
-    page_break
+        out the correct answer. Please enter proper capitilization and punctuation
+        to move on to the next question. If question is unanswerable, please type
+        in 'pass'. Get ready to play. (Press 'ctrl-z' at any time to quit the game)"
     run_game(username, count = 0)
 end
 
@@ -90,7 +87,7 @@ def run_game(username, count = 0)
         else
             page_break
             new_count = count
-            puts "Sorry! That was not the correct answer :( You finished with a streak of #{count}!"
+            puts "Sorry! That was not the correct answer :( You finished with a streak of #{count}!".colorize(:red)
             play_again_prompt(username)
         end
     
@@ -109,10 +106,10 @@ def save_user(username)
 
         if usernames.include?(username)
             puts "Welcome back #{username}! Please enter: 
-                                            1 to PLAY, 
-                                            2 to SEE YOUR HIGHEST STREAK 
-                                            3 to CHANGE USERNAME
-                                            4 to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
+                                                (1) to PLAY, 
+                                                (2) to SEE YOUR HIGHEST STREAK 
+                                                (3) to CHANGE USERNAME
+                                                (4) to DELETE YOUR ACCOUNT (WE DO NOT ADVISE YOU DO THIS)"
             page_break
             
             input = gets.chomp.downcase
@@ -129,7 +126,8 @@ def save_user(username)
 
                 elsif input == "4"
                     User.find_by(name: username).delete
-                    puts "We're sorry to see you go :( Your account has been deleted."
+                    puts "We're sorry to see you go :("
+                    puts "Your account has been deleted.".colorize(:red)
                 else
                     puts "Sorry, that isn't a valid entry. Please try again."
                     restart_welcome
@@ -150,8 +148,9 @@ def my_highest_score(username)
     my_user_id = my_user.id
     highest_score = Game.all.where(user_id: my_user_id).order(score: :desc).first.score
         if highest_score >= 3
-        puts "Your highest score is #{highest_score}!!!
-        Want to try and beat this score? (y/n)"
+        puts "Your highest score is #{highest_score}!!! Want to try and beat this score? Please enter:
+                                                                                            (y) for 'yes'
+                                                                                            (n) for 'no'"
             input = gets.chomp.downcase
                 if input == "y"
                     run_game(username)
@@ -180,7 +179,7 @@ def change_username(new_name, username)
     else
         User.find_by(name: username).update(name: new_name)
         page_break
-        puts "Your username is now #{new_name}!"
+        puts "Your username is now #{new_name}!".colorize(:green)
         restart_welcome
     end
 end
@@ -190,11 +189,13 @@ def page_break
 end
 
 def play_again_prompt(username)
+    page_break
     puts "Would you like to play again? Press y for 'yes' and n for 'no'"
     input = gets.chomp.downcase
         if input == "y"
             run_game(username, count = 0)
         elsif input == "n"
+            page_break
             puts "Have a nice day!"
         else
             puts "Sorry, that was not a valid entry. Please try again"
@@ -202,6 +203,18 @@ def play_again_prompt(username)
         end
 end
 
+def game_logo
 
+    puts "
+    ███████╗████████╗██████╗ ███████╗ █████╗ ██╗  ██╗    ████████╗██████╗ ██╗██╗   ██╗██╗ █████╗ 
+    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗██║ ██╔╝    ╚══██╔══╝██╔══██╗██║██║   ██║██║██╔══██╗
+    ███████╗   ██║   ██████╔╝█████╗  ███████║█████╔╝        ██║   ██████╔╝██║██║   ██║██║███████║
+    ╚════██║   ██║   ██╔══██╗██╔══╝  ██╔══██║██╔═██╗        ██║   ██╔══██╗██║╚██╗ ██╔╝██║██╔══██║
+    ███████║   ██║   ██║  ██║███████╗██║  ██║██║  ██╗       ██║   ██║  ██║██║ ╚████╔╝ ██║██║  ██║
+    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝       ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═╝                                                                                             
+    ".colorize(:blue)
 
+end
+
+game_logo
 welcome
